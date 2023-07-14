@@ -1,22 +1,18 @@
 const express = require("express");
 const app = express();
-const mysql = require("mysql2");
+const cors = require("cors");
+const fs = require('fs');
 
-const db = mysql.createPool({
-  host: "localhost",
-  user: "root",
-  password: "joao25081997",
-  database: "cad",
-});
+app.use(cors());
+app.use(express.json());
 
-app.get("/", (req, res) => {
-  db.query(
-    "INSERT INTO cadastrados (tipo_requer, secretaria, date, numprocesso, name) VALUES ('Oficios', 'PGM', '01-01-1979', '29183/2009' ,'joão pedro')",
-    (err, result) => {
-      console.log(err);
-      console.log(result);
-    }
-  );
+const requerTypeRaw = fs.readFileSync('./type-requer.json', 'utf-8');
+const requerTypeAll = JSON.parse(requerTypeRaw);
+
+app.get("/main", (req, res) => {
+  res.json({
+    dataValues: requerTypeAll,
+  });
 });
 
 app.listen(3030, () => {
